@@ -3,7 +3,7 @@
 
 ## About
 iPhone app with better random number picker (not on AppStore yet.)<br>
-[Website](https://ulyssas.github.io/Rndsite/)<br>
+[Website](https://wimpum.github.io/Rndsite/)<br>
 My first ever Swift project
 
 ## Native Design
