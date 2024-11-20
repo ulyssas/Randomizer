@@ -29,8 +29,8 @@ struct AboutView: View {
             Link("MIT License", destination: URL(string: "https://opensource.org/license/mit")!).padding(1)
             Link("feedback", destination: URL(string: "https://forms.gle/aYxcCUKScGAzcp9Q6")!).padding(1)
             HStack{
-                Link("Website", destination: URL(string: "https://WimPum.github.io/Rndsite/")!).padding(1)
-                Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!).padding(1)
+                Link("Website", destination: URL(string: "https://ulyssas.github.io/Rndsite/")!).padding(1)
+                Link("View code on GitHub", destination: URL(string: "https://github.com/ulyssas/Randomizer")!).padding(1)
             }
             Spacer()
         }.toolbar {
