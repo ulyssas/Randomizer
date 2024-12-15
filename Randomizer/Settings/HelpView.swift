@@ -11,25 +11,7 @@ struct HelpView: View {
     @Binding var isPresented: Bool
     
     var body: some View {
-        if #available(iOS 16.0, *) {
-            NavigationStack{
-                CSVHelp()
-                    .navigationTitle("About CSV")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing){
-                            Button(action: {
-                                isPresented = false
-                            }){
-                                Text("Done")
-                                    .bold()
-                                    .padding(5)
-                            }
-                        }
-                    }
-            }
-
-        }else{
+        Navigations{
             CSVHelp()
                 .navigationTitle("About CSV")
                 .navigationBarTitleDisplayMode(.inline)

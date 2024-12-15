@@ -3,7 +3,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    
     // 設定画面用
     @EnvironmentObject var configStore: SettingsStore // EnvironmentObjになった設定
     
@@ -28,7 +27,7 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
                     .animation(.easeInOut, value: configStore.giveBackground())
             }
-            if vSizeClass == .regular {
+            if vSizeClass == .regular { // 画面回転検知
                 PortraitView()
             } else {
                 LandscapeView()
@@ -37,9 +36,9 @@ struct ContentView: View {
         .onAppear{//起動時に一回だけ実行となる このContentViewしかないから
             if configStore.configBgNumber > configStore.colorList.count-1{ // crash guard
                 configStore.configBgNumber = 20 // hardcoded
+                configStore.giveRandomBgNumber()
             }
             // csvSaveの方もcrash guardつける
-            configStore.giveRandomBgNumber()
         }
     }
 }

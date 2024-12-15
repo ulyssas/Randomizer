@@ -10,62 +10,31 @@ import SwiftUI
 struct SettingsView: View { // will be called from ContentView
     @EnvironmentObject var configStore: SettingsStore // 設定 アクセスできるはず
     @EnvironmentObject var randomStore: RandomizerState // 実行中かどうか＋今の出目
-    @Binding var isPresentedLocal: Bool
+    @Binding var isPresented: Bool
     
     var body: some View {
-        if #available(iOS 16.0, *) {
-            NavigationStack {
-                Form{
-                    SettingsList()
-                    Section(header: Text("info")){
-                        NavigationLink(destination: AboutView(isPresented: $isPresentedLocal)){
-                            Text("About")
-                        }
-                        NavigationLink(destination: HelpView(isPresented: $isPresentedLocal)){
-                            Text("About CSV")
-                        }
+        Navigations { // combined
+            Form{
+                SettingsList()
+                Section(header: Text("info")){
+                    NavigationLink(destination: AboutView(isPresented: $isPresented)){
+                        Text("About")
                     }
-                }
-                .navigationTitle("Settings")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing){
-                        Button(action: {
-                            isPresentedLocal = false
-                        }){//どうしよう？
-                            Text("Done")
-                                .bold()
-                                .padding(5)
-                        }
+                    NavigationLink(destination: HelpView(isPresented: $isPresented)){
+                        Text("About CSV")
                     }
                 }
             }
-        }
-        else {
-            NavigationView{//iOS 15用
-                Form{
-                    SettingsList()
-                    Section(header: Text("info")){
-                        NavigationLink(destination: AboutView(isPresented: $isPresentedLocal)){
-                            Text("About")
-                        }
-                        NavigationLink(destination: HelpView(isPresented: $isPresentedLocal)){
-                            Text("About CSV")
-                        }
-                    }
-                }
-                .background(Color(.systemGroupedBackground)) // なんでか真っ白になってた randomStore.init()のせい
-                .navigationTitle("Settings")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing){
-                        Button(action: {
-                            isPresentedLocal = false
-                        }){//どうしよう？
-                            Text("Done")
-                                .bold()
-                                .padding(5)
-                        }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing){
+                    Button(action: {
+                        isPresented = false
+                    }){//どうしよう？
+                        Text("Done")
+                            .bold()
+                            .padding(5)
                     }
                 }
             }

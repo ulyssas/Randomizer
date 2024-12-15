@@ -6,24 +6,22 @@
 //
 
 import SwiftUI
-import Foundation //Random
 import UniformTypeIdentifiers //fileImporter
 
 struct PortraitView: View {
     //main
-    @State private var minBoxValue: String = "1"
+    @State private var minBoxValue: String = "1" // 数字入力画面だけど実はStringになっている
     @State private var maxBoxValue: String = "50"
     @State private var showCSVButtonAndName: Bool = true // キーボード入力する時に1番上と名前表示する部分を隠す
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
     @FocusState private var isInputMinFocused: Bool//キーボードOn/Off
     @FocusState private var isInputMaxFocused: Bool//キーボードOn/Off
-    private let inputMaxLength: Int = 10                      //最大桁数
+    private let inputMaxLength: Int = 10                      //最大桁数 変えない
 
     //fileImporter
     @State private var openedFileLocation = URL(string: "file://")!//defalut値確認
     @State private var isOpeningFile = false                       //ファイルダイアログを開く変数
-    @State private var isShowingCSVTutor = false                    // チュートリアル
     @State private var showMessage: String = ""
     @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
 
@@ -34,11 +32,12 @@ struct PortraitView: View {
     //misc
     @State private var viewSelection = 1    //ページを切り替える用
     @State private var isSettingsView: Bool = false//設定画面を開く用
+    @State private var isShowingCSVTutor = false                    // チュートリアル
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
             TabView(selection: $viewSelection){
-                //MARK: 1ページ目
+                //MARK: - 1ページ目
                 VStack(){
                     Spacer().frame(height: 5)
                     if showCSVButtonAndName == true{ //キーボード出す時は隠してます
@@ -111,7 +110,6 @@ struct PortraitView: View {
                                         .setUnderline()
                                         .frame(width: 120)
                                         .focused($isInputMinFocused)
-                                        .disabled(randomStore.isButtonPressed)
                                 }
                                 Spacer()
                                 VStack{
@@ -129,7 +127,7 @@ struct PortraitView: View {
                                         .setUnderline()
                                         .frame(width: 120)
                                         .focused($isInputMaxFocused)
-                                        .disabled(randomStore.isButtonPressed)
+                                        
                                 }
                                 Spacer()
                             }
@@ -151,9 +149,10 @@ struct PortraitView: View {
                                     .padding()
                                     .frame(width:140, height: 36)
                                     .glassMaterial(cornerRadius: 24)
-                            }.disabled(randomStore.isButtonPressed)
+                            }
                         }
-                    }.toolbar {
+                    }.disabled(randomStore.isButtonPressed)
+                    .toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
                             Button(action: {
                                 print("keyboard min! pressed")
@@ -187,7 +186,7 @@ struct PortraitView: View {
                         }){
                             Text("Next draw")
                                 .glassButton()
-                        }.disabled(randomStore.isButtonPressed)
+                        }
                         .alert("All drawn", isPresented: $showingAlert) {
                             // アクションボタンリスト
                         } message: {
@@ -200,50 +199,31 @@ struct PortraitView: View {
                         }) {
                             Text("Start over")
                                 .glassButton()
-                        }.disabled(randomStore.isButtonPressed)
+                        }
                         .alert("Error", isPresented: $showingAlert2) {
                             // アクションボタンリスト
                         } message: {
                             Text("put bigger number on right box")
                         }
                         Spacer()
-                    }
+                    }.disabled(randomStore.isButtonPressed)
                     Spacer(minLength: 20)
                 }
                 .tabItem {
                   Text("Main") }
                 .tag(1)
 
-                //MARK: 2ページ目
+                //MARK: - 2ページ目
                 VStack(){
                     Spacer(minLength: 5)
                     Text("History")//リストを表示
                         .fontSemiBold(size: 20)
                         .padding()
-                    if let historySeq = randomStore.historySeq{//historySeqに値入ってたら
-                        if historySeq.count > 0{
-                            List {
-                                ForEach(0..<historySeq.count, id: \.self){ index in
-                                    HStack(){
-                                        Text("No.\(index+1)")
-                                            .fontLight(size: 25)
-                                        Spacer()
-                                        Text("\(historySeq[index])")
-                                            .fontSemiBold(size: 40)
-                                            .frame(//width: screenWidth - 140, // when will this be a problem??
-                                                   height: 40,
-                                                   alignment: .trailing)
-                                            .minimumScaleFactor(0.2)
-                                    }.listRowBackground(Color.clear)//リストの項目の背景を無効化
-                                }
-                            }
-                            .scrollCBIfPossible()//リストの背景を無効化
-                            .listStyle(.plain)
+                    if let historySeq = randomStore.historySeq, !historySeq.isEmpty{ // LazyVStackで爆速になった
+                        HistoryList(historySeq: historySeq)
+                    }else{
+                        Color.clear // 何もない時
                             .frame(alignment: .center)
-                        }else{
-                            Color.clear // 何もない時
-                                .frame(alignment: .center)
-                        }
                     }
                     Spacer(minLength: 20)
                 }
@@ -262,81 +242,28 @@ struct PortraitView: View {
             })
             .ignoresSafeArea(edges: .top)
         }
-        .onAppear{//画面切り替わり時に実行となる
+        .onAppear{//画面切り替わり時(画面回転)に実行となる
             initReset()
         }
         //設定画面
         .sheet(isPresented: self.$isSettingsView){
-            SettingsView(isPresentedLocal: self.$isSettingsView)
+            SettingsView(isPresented: self.$isSettingsView)
         }
         //CSVヘルプ
         .sheet(isPresented: self.$isShowingCSVTutor){
-            if #available(iOS 16, *){
-                HelpView(isPresented: self.$isShowingCSVTutor)
-            }else{
-                NavigationView{
-                    CSVHelp()
-                        .navigationTitle("About CSV")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing){
-                                Button(action: {
-                                    isShowingCSVTutor = false
-                                }){
-                                    Text("Done")
-                                        .bold()
-                                        .padding(5)
-                                }
-                            }
-                        }
-                }
-
-            }
-
+            HelpView(isPresented: self.$isShowingCSVTutor)
         }
         .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false
         ){ result in
             if case .success = result {
                 do{
                     let fileURL: URL = try result.get().first!
-                    self.openedFileLocation = fileURL//これでFullパス
-                    if openedFileLocation.startAccessingSecurityScopedResource() {
-                        print("loading csv from \(openedFileLocation)")
-                        if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら（転置済み）
-                            // fileLoading
-                            print("Importer: \(csvNames)")            // print all names
-                            print("Importer: \(csvNames[0].count)")   // 一列目==[0] 一列目しか表示しません
-                            if csvNames[0].count > 1{ // SUCCESS
-                                randomStore.clearCsvNames() // まずクリア
-                                randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
-                                randomStore.csvNameStore = csvNames
-                                randomStore.saveCsvNames(csvNames: csvNames) //store DOES THIS WORK??
-                                randomStore.isFileSelected = true
-                                buttonReset()
-                            }else{ // TOO SHORT 一つの時もmin==maxでエラー
-                                print("ERROR list too SHORT!!")
-                                fileReset(message: "Error: List needs to have at least two items.")
-                                withAnimation{
-                                    showMessageOpacity = 0.6
-                                }
-                            }
-                        }else{
-                            print("no files")
-                            // Message改行できない😭
-                            fileReset(message: "Error loading files. Please load files from local storage.")
-                            withAnimation{
-                                showMessageOpacity = 0.6
-                            }
-                        }
-                    }
+                    fileLoad(fileURL: fileURL)
                 }
-                catch{//このcatchとelse機能してない
-                    print("error reading file \(error.localizedDescription)")
-                }
+                //このcatch仕事してないぞ？？
+                catch{ print("error reading file \(error.localizedDescription)") }
             }
-            else{
-                print("File Import Failed")
-            }
+            else{ print("File Import Failed") }
         }
     }
     
@@ -349,6 +276,39 @@ struct PortraitView: View {
         showMessage = message//変更するけど見えない
     }
     
+    func fileLoad(fileURL: URL){
+        self.openedFileLocation = fileURL//これでFullパス
+        if openedFileLocation.startAccessingSecurityScopedResource() {
+            print("loading csv from \(openedFileLocation)")
+            if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら（転置済み）
+                // fileLoading
+                print("Importer: \(csvNames)")            // print all names
+                print("Importer: \(csvNames[0].count)")   // 一列目==[0] 一列目しか表示しません
+                if csvNames[0].count > 1{ // SUCCESS
+                    randomStore.clearCsvNames() // まずクリア
+                    randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
+                    randomStore.csvNameStore = csvNames
+                    randomStore.saveCsvNames(csvNames: csvNames) //store DOES THIS WORK??
+                    randomStore.isFileSelected = true
+                    buttonReset()
+                }else{ // TOO SHORT 一つの時もmin==maxでエラー
+                    print("ERROR list too SHORT!!")
+                    fileReset(message: "Error: List needs to have at least two items.")
+                    withAnimation{
+                        showMessageOpacity = 0.6
+                    }
+                }
+            }else{
+                print("no files")
+                // Message改行できない😭
+                fileReset(message: "Error loading files. Please load files from local storage.")
+                withAnimation{
+                    showMessageOpacity = 0.6
+                }
+            }
+        }
+    }
+    
     func initReset() {//起動時に実行 No.0/表示: 0 実行中にこんなんやったらまずすぎ
         minBoxValue = String(randomStore.minBoxValueLock)//保存から復元
         maxBoxValue = String(randomStore.maxBoxValueLock)
@@ -358,10 +318,11 @@ struct PortraitView: View {
         } else {
             showMessageOpacity = 0.6
         }
-        print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
-//        randomStore.historySeq! = Array(1...99978)//履歴に数字をたくさん追加してパフォーマンス計測
+//        print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
 ////        // O(N) は重い。。。今ではだいぶ軽くなった
-//        randomStore.drawCount = 99978
+///         //履歴に数字をたくさん追加してパフォーマンス計測
+        randomStore.historySeq! = Array(1...999978)
+        randomStore.drawCount = 999978
     }
     
     func buttonReset() {
@@ -393,14 +354,14 @@ struct PortraitView: View {
             }
             showMessage = "press Start Over to apply changes" //違ったら戻す
         }
-        // ここをminMaxSave
+        // ここでminMaxSave
         randomStore.minBoxValueLock = Int(minBoxValue)!
         randomStore.maxBoxValueLock = Int(maxBoxValue)!
         print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")
         
         isInputMinFocused = false
         isInputMaxFocused = false
-        randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめた
+        randomStore.randomNumberPicker(resetting: true, configStore: configStore)//まとめた
     }
     
     func buttonNext() {
@@ -435,7 +396,7 @@ struct PortraitView: View {
             }
             isInputMinFocused = false
             isInputMaxFocused = false
-            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+            randomStore.randomNumberPicker(resetting: false, configStore: configStore)//まとめました
         }
     }
     

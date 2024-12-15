@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B129DCA42BFE0346006C2E78 /* RandomizerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B129DCA32BFE0346006C2E78 /* RandomizerState.swift */; };
 		B129DCA62BFE0A75006C2E78 /* PortraitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B129DCA52BFE0A75006C2E78 /* PortraitView.swift */; };
+		B1387FB92D0BF49F00EBF049 /* Navigations.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1387FB82D0BF49F00EBF049 /* Navigations.swift */; };
 		B14E4FD42BBBF3CD007E946D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */; };
 		B14E50012BBF13E8007E946D /* LandscapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50002BBF13E8007E946D /* LandscapeView.swift */; };
 		B14E50052BBF3D37007E946D /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50042BBF3D37007E946D /* Functions.swift */; };
@@ -19,6 +20,7 @@
 		B1A4FA622BFCD69900BD1E54 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A4FA612BFCD69900BD1E54 /* SettingsStore.swift */; };
 		B1B8AB792C3AC834005BB79B /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B8AB782C3AC834005BB79B /* HelpView.swift */; };
 		B1BF25132B0D282700F3E6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD99282B07882000781D1D /* Assets.xcassets */; };
+		B1CF6A472D0F441D00D23D92 /* HistoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CF6A462D0F440F00D23D92 /* HistoryList.swift */; };
 		B1F431F72BAC13EB004A92D0 /* IntSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F431F62BAC13EB004A92D0 /* IntSlider.swift */; };
 		B1F431F92BAE18C3004A92D0 /* limitedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F431F82BAE18C2004A92D0 /* limitedTextField.swift */; };
 		B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99242B07881D00781D1D /* RandomizerApp.swift */; };
@@ -29,6 +31,7 @@
 /* Begin PBXFileReference section */
 		B129DCA32BFE0346006C2E78 /* RandomizerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizerState.swift; sourceTree = "<group>"; };
 		B129DCA52BFE0A75006C2E78 /* PortraitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortraitView.swift; sourceTree = "<group>"; };
+		B1387FB82D0BF49F00EBF049 /* Navigations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigations.swift; sourceTree = "<group>"; };
 		B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B14E50002BBF13E8007E946D /* LandscapeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeView.swift; sourceTree = "<group>"; };
 		B14E50042BBF3D37007E946D /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
@@ -38,6 +41,7 @@
 		B18556AF2C5F53D900E25BFE /* AnimGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimGradient.swift; sourceTree = "<group>"; };
 		B1A4FA612BFCD69900BD1E54 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		B1B8AB782C3AC834005BB79B /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		B1CF6A462D0F440F00D23D92 /* HistoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryList.swift; sourceTree = "<group>"; };
 		B1F431F62BAC13EB004A92D0 /* IntSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntSlider.swift; sourceTree = "<group>"; };
 		B1F431F82BAE18C2004A92D0 /* limitedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = limitedTextField.swift; sourceTree = "<group>"; };
 		B1FD99212B07881D00781D1D /* Randomizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Randomizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +111,8 @@
 		B1A4FA652BFCD71300BD1E54 /* CustomElement */ = {
 			isa = PBXGroup;
 			children = (
+				B1CF6A462D0F440F00D23D92 /* HistoryList.swift */,
+				B1387FB82D0BF49F00EBF049 /* Navigations.swift */,
 				B1F431F62BAC13EB004A92D0 /* IntSlider.swift */,
 				B1F431F82BAE18C2004A92D0 /* limitedTextField.swift */,
 				B18556AF2C5F53D900E25BFE /* AnimGradient.swift */,
@@ -226,6 +232,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1CF6A472D0F441D00D23D92 /* HistoryList.swift in Sources */,
 				B18556B02C5F53D900E25BFE /* AnimGradient.swift in Sources */,
 				B14E50052BBF3D37007E946D /* Functions.swift in Sources */,
 				B1B8AB792C3AC834005BB79B /* HelpView.swift in Sources */,
@@ -234,6 +241,7 @@
 				B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */,
 				B1750F4B2C0D9FF3008133B7 /* AboutView.swift in Sources */,
 				B14E50072BBF3DE1007E946D /* Extensions.swift in Sources */,
+				B1387FB92D0BF49F00EBF049 /* Navigations.swift in Sources */,
 				B1F431F92BAE18C3004A92D0 /* limitedTextField.swift in Sources */,
 				B1FD99272B07881D00781D1D /* ContentView.swift in Sources */,
 				B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */,
@@ -393,7 +401,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.99.2;
+				MARKETING_VERSION = 0.99.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.Randomizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -432,7 +440,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.99.2;
+				MARKETING_VERSION = 0.99.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.Randomizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

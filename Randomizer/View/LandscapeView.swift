@@ -47,7 +47,7 @@ struct LandscapeView: View {
     }
     
     func initReset() {//起動時に実行 No.0/表示: 0 もう Initすらいらないのか？
-        print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
+//        print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
     }
     
     func buttonNext() {
@@ -58,7 +58,7 @@ struct LandscapeView: View {
             randomStore.isButtonPressed = false
         }
         else{
-            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+            randomStore.randomNumberPicker(resetting: false, configStore: configStore)//まとめました
         }
     }
 }

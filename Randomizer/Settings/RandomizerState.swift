@@ -26,8 +26,8 @@ final class RandomizerState: ObservableObject{
     
     // history&Shuffler
     @Published var historySeq: [Int]? = []      //履歴 ない時は0じゃなくてEmpty
-    private var remainderSeq: [Int] = [0]       //弾いていって残った数字 ロール用
-    @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字
+    private var remainderSeq: Set<Int> = [0]    //弾いていって残った数字 ロール用
+    @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字 ここが0だから初期化すると0
     @Published var rollListCounter: Int = 1     //ロールのリスト上を移動
     @Published var isTimerRunning: Bool = false
     @Published var isButtonPressed: Bool = false//同時押しを無効にする
@@ -68,46 +68,35 @@ final class RandomizerState: ObservableObject{
         drawLimit = maxBoxValueLock - minBoxValueLock + 1
     }
     
-    func randomNumberPicker(mode: Int, configStore: SettingsStore){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
+    func randomNumberPicker(resetting: Bool, configStore: SettingsStore){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
         drawLimit = maxBoxValueLock - minBoxValueLock + 1
         
-        if mode == 1{ // mode 1はnext
-            drawCount += 1 // draw next number
+        // draw next number
+        if !resetting{
+            drawCount += 1
         }
-        else if mode == 2{
+        else{
             drawCount = 1
         }
-        remainderSeq = [Int]()
-        
-        rollSpeed = interpolateQuadratic(t: 0, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 0?????
-        
+        remainderSeq = Set<Int>()
+        rollSpeed = interpolateQuadratic(t: 0,
+                                         minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3),
+                                         maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 0?????
         rollListCounter = 1
-        
         let remaining = drawLimit - drawCount + 1 // 残り
         print("\(remaining) numbers remaining")
+        
+        // MARK: Terrible code
         realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
-        if configStore.isRollingOn && remaining > 1{
-            let ifRemainedMore = remaining > configStore.rollingCountLimit // ロール用に選ぶ数字の量を決定 少ない時は残りの数 多ければrollingCountLimitの数選ぶ
-            let limit = ifRemainedMore ? configStore.rollingCountLimit : remaining
-            var historySeqforRoll = Set<Int>()     //履歴SET!!!!!
-            var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
-            for _ in (1...limit){ // trueなら前
-                if ifRemainedMore{
-                    remainderSeq.append(give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq))//ここ変えます
-                }else{
-                    repeat{
-                        pickedNumber = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
-                    }while historySeqforRoll.contains(pickedNumber) // ??
-                    historySeqforRoll.insert(pickedNumber)
-                    remainderSeq.append(pickedNumber)
-                }
-            }
+        if configStore.isRollingOn && remaining > 1{ // give1Rndを通る道
+            remainderSeq = giveRemainSeq(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq, length: configStore.rollingCountLimit)
             rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
-            logging(realAnswer: realAnswer) // ログ　releaseでは消す
+            // MARK: ↑
+//            logging(realAnswer: realAnswer) // ログ　releaseでは消す これで相当遅くなっている
             startTimer(configStore: configStore)//ロール開始, これで履歴にも追加
         }else{//1番最後と、ロールを無効にした場合こっちになります
             configStore.giveRandomBgNumber()
-            historySeq?.append(realAnswer) //履歴追加
+            historySeq?.append(realAnswer) //履歴追加重たすぎる
             saveHistory(value: realAnswer) //履歴ほぞん
             rollDisplaySeq = [realAnswer]//答えだけ追加
             giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)

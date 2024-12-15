@@ -8,26 +8,44 @@
 import UIKit
 
 // 最大最小と履歴をもとに数字を選ぶ
-// Setで高速化なるか？
+// これが最速
 func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {
-    guard let historySet = historyList.map(Set.init), !historySet.isEmpty else{
+    guard let historyList = historyList, !historyList.isEmpty else{
         return Int.random(in: min...max)
     }
     var randomNum: Int
-    repeat{
+    repeat{ // 一個なら早いかもしれないが多くなると遅い
         randomNum = Int.random(in: min...max)
-    }while historySet.contains(randomNum)//guardのおかげでforceUnwrapもいらない
+    }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
     return randomNum
 }
 
+// どうやったらhistoryListにないやつだけを選べるか？
+// どうやったら速くできるか
+func giveRemainSeq(min: Int, max: Int, historyList: [Int]?, length: Int) -> Set<Int>{
+    guard let historyList = historyList else{ return Set<Int>() }
+    let historySet = Set(historyList) // conversion
+    let remainCount = max-min+1-historyList.count
+    let limit = (remainCount > length) ? length : remainCount // ロール用に選ぶ数字の量を決定 少ない時は残りの数 多ければrollingCountLimitの数選ぶ
+    var remainSeq = Set<Int>()     //履歴
+    for _ in (1...limit){ // trueなら前
+        var pickedNumber: Int
+        repeat{
+            pickedNumber = Int.random(in: min...max)
+        }while historySet.contains(pickedNumber) || remainSeq.contains(pickedNumber) // 選んだ数がhistoryListにあったらまずい 被りなし
+        remainSeq.insert(pickedNumber)
+    }
+    return remainSeq
+}
+
 // ロールエフェクト用の数列生成 returnArrayの最後にrealAnswerを追加する
-// contentsはまだ選んでいない数(remainderSeq)
-func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{
+// contentsはまだ選んでいない数(remainderSeq) contentsは100ぐらいまでの大きさ
+func giveRandomSeq(contents: Set<Int>?, length: Int, realAnswer: Int) -> [Int]{
+    guard let contents = contents, !contents.isEmpty else{ return [ realAnswer ] }
     var returnArray = [Int]()
-    let listLength = contents.count//リストの長さ
-    if listLength > 1{
+    if contents.count > 1{
         for _ in 0..<length-1{
-            var assignedValue = contents.randomElement()!//ランダムに1つ抽出
+            var assignedValue: Int
             repeat{//1回目以降は
                 assignedValue = contents.randomElement()!   
             } while returnArray.last == assignedValue
