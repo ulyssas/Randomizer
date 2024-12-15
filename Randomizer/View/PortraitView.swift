@@ -321,8 +321,8 @@ struct PortraitView: View {
 //        print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
 ////        // O(N) は重い。。。今ではだいぶ軽くなった
 ///         //履歴に数字をたくさん追加してパフォーマンス計測
-        randomStore.historySeq! = Array(1...999978)
-        randomStore.drawCount = 999978
+//        randomStore.historySeq! = Array(1...999978)
+//        randomStore.drawCount = 999978
     }
     
     func buttonReset() {
