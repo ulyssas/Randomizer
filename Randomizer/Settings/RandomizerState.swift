@@ -156,7 +156,7 @@ final class RandomizerState: ObservableObject{
         do {
             let items = try viewContext.fetch(fetchRequest)
             if items.isEmpty {
-                print("HISTORY: Nyow items fuwund")
+                print("HISTORY: No items found")
                 historySeq = []
             } else {
                 historySeq = items.map { Int($0.value) }
@@ -212,7 +212,7 @@ final class RandomizerState: ObservableObject{
         do {
             let items = try viewContext.fetch(fetchRequest)
             if items.isEmpty {
-                print("CSV: Nyow items fuwund")
+                print("CSV: No items found")
                 isFileSelected = false // DONT CRASH
                 csvNameStore = []
             } else {
@@ -231,7 +231,7 @@ final class RandomizerState: ObservableObject{
     func saveCsvNames(csvNames: [[String]]){
         let batchInsert = NSBatchInsertRequest(entity: CsvNamesSeq.entity(), objects: csvNames[0].map { ["name": String($0)] })
         do {
-            print("IMCOMINGNOW")
+            print("Saving CSV Names")
             try viewContext.execute(batchInsert)
             try viewContext.save()
         } catch {
